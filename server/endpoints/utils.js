@@ -21,6 +21,11 @@ function utilEndpoints(app) {
       response.sendStatus(500).end();
     }
   });
+
+  const {
+    dockerModelRunnerUtilsEndpoints,
+  } = require("./utils/dockerModelRunnerUtils");
+  dockerModelRunnerUtilsEndpoints(app);
 }
 
 function getGitVersion() {
@@ -156,6 +161,12 @@ function getModelTag() {
       break;
     case "docker-model-runner":
       model = process.env.DOCKER_MODEL_RUNNER_LLM_MODEL_PREF;
+      break;
+    case "privatemode":
+      model = process.env.PRIVATEMODE_LLM_MODEL_PREF;
+      break;
+    case "sambanova":
+      model = process.env.SAMBANOVA_LLM_MODEL_PREF;
       break;
     default:
       model = "--";

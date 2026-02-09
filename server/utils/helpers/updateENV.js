@@ -94,6 +94,10 @@ const KEY_MAPPING = {
     envKey: "LMSTUDIO_MODEL_TOKEN_LIMIT",
     checks: [],
   },
+  LMStudioAuthToken: {
+    envKey: "LMSTUDIO_AUTH_TOKEN",
+    checks: [],
+  },
 
   // LocalAI Settings
   LocalAiBasePath: {
@@ -123,10 +127,6 @@ const KEY_MAPPING = {
   },
   OllamaLLMTokenLimit: {
     envKey: "OLLAMA_MODEL_TOKEN_LIMIT",
-    checks: [],
-  },
-  OllamaLLMPerformanceMode: {
-    envKey: "OLLAMA_PERFORMANCE_MODE",
     checks: [],
   },
   OllamaLLMKeepAliveSeconds: {
@@ -803,6 +803,26 @@ const KEY_MAPPING = {
     envKey: "DOCKER_MODEL_RUNNER_LLM_MODEL_TOKEN_LIMIT",
     checks: [nonZero],
   },
+
+  // Privatemode Options
+  PrivateModeBasePath: {
+    envKey: "PRIVATEMODE_LLM_BASE_PATH",
+    checks: [isValidURL],
+  },
+  PrivateModeModelPref: {
+    envKey: "PRIVATEMODE_LLM_MODEL_PREF",
+    checks: [isNotEmpty],
+  },
+
+  // SambaNova Options
+  SambaNovaLLMApiKey: {
+    envKey: "SAMBANOVA_LLM_API_KEY",
+    checks: [isNotEmpty],
+  },
+  SambaNovaLLMModelPref: {
+    envKey: "SAMBANOVA_LLM_MODEL_PREF",
+    checks: [isNotEmpty],
+  },
 };
 
 function isNotEmpty(input = "") {
@@ -917,6 +937,8 @@ function supportedLLM(input = "") {
     "zai",
     "giteeai",
     "docker-model-runner",
+    "privatemode",
+    "sambanova",
   ].includes(input);
   return validSelection ? null : `${input} is not a valid LLM provider.`;
 }

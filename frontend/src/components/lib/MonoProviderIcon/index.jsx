@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/static-components */
 // https://lobehub.com/icons for all the icons
 import OpenAI from "@lobehub/icons/es/OpenAI/components/Mono";
 import Anthropic from "@lobehub/icons/es/Anthropic/components/Mono";
@@ -16,6 +17,7 @@ import IBM from "@lobehub/icons/es/IBM/components/Mono";
 import Bytedance from "@lobehub/icons/es/ByteDance/components/Mono";
 import Kimi from "@lobehub/icons/es/Kimi/components/Mono";
 import Snowflake from "@lobehub/icons/es/Snowflake/components/Mono";
+import Liquid from "@lobehub/icons/es/Liquid/components/Mono";
 
 // Direct provider key -> icon mapping for exact matches
 const providerIcons = {
@@ -36,6 +38,7 @@ const providerIcons = {
   ibm: IBM,
   bytedance: Bytedance,
   kimi: Kimi,
+  liquid: Liquid,
 };
 
 // Pattern matching rules: regex pattern -> icon component
@@ -46,7 +49,8 @@ const modelPatterns = [
   { pattern: /^claude-/i, icon: Anthropic },
   { pattern: /^gemini-/i, icon: Gemini },
   { pattern: /gemma/i, icon: Gemma },
-  { pattern: /^llama/i, icon: Meta },
+  { pattern: /llama/i, icon: Meta },
+  { pattern: /^meta/i, icon: Meta },
   {
     pattern: /^(mistral|devstral|mixtral|magistral|codestral|ministral)/i,
     icon: Mistral,
@@ -62,6 +66,7 @@ const modelPatterns = [
   { pattern: /^seed/i, icon: Bytedance },
   { pattern: /^kimi/i, icon: Kimi },
   { pattern: /^snowflake/i, icon: Snowflake },
+  { pattern: /^lfm/i, icon: Liquid },
 ];
 
 /**
@@ -80,6 +85,8 @@ function findIconByModelName(modelName) {
  * @param {string} props.provider - The provider key (for exact match) or model name (for pattern match).
  * @param {('exact'|'pattern')} props.match - Match mode: 'exact' for provider key, 'pattern' for model name matching.
  * @param {number} props.size - The size of the icon.
+ * @param {string} props.className - The class name of the icon.
+ * @param {string} props.fallbackIconKey - The key of the fallback icon to use if no icon is found.
  * @returns {React.ReactNode}
  */
 export default function MonoProviderIcon({
@@ -87,11 +94,14 @@ export default function MonoProviderIcon({
   match = "exact",
   size = 24,
   className = "",
+  fallbackIconKey = null,
 }) {
   let Icon = null;
 
   if (match === "exact") Icon = providerIcons[provider?.toLowerCase()];
   else if (match === "pattern") Icon = findIconByModelName(provider);
+  if (!Icon && fallbackIconKey && providerIcons[fallbackIconKey])
+    Icon = providerIcons[fallbackIconKey];
   if (!Icon) return null;
   return <Icon size={size} className={className} />;
 }
